@@ -6,16 +6,19 @@ using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Net;
 using System.Net.Mail;
+using Microsoft.Extensions.Configuration;
 
 namespace SendMailProject.Controllers
 {
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(ApplicationDbContext context)
+        public AccountController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
         public IActionResult Index()
         {
@@ -38,7 +41,6 @@ namespace SendMailProject.Controllers
                 _context.Users.Add(registerView);
                 _context.SaveChanges();
 
-                // ✅ Send email
                 SendConfirmationEmail(registerView.Email, registerView.FullName);
 
                 TempData["SuccessMessage"] = "User created successfully!";
@@ -48,26 +50,27 @@ namespace SendMailProject.Controllers
             return View(registerView);
         }
 
-        // ✅ Add this private method
         private void SendConfirmationEmail(string toEmail, string fullName)
         {
-            var client = new SmtpClient("sandbox.smtp.mailtrap.io", 2525)
+            string host = _configuration["MailSettings:Host"];
+            int port = int.Parse(_configuration["MailSettings:Port"]);
+            string username = _configuration["MailSettings:Username"];
+            string password = _configuration["MailSettings:Password"];
+            string fromEmail = _configuration["MailSettings:FromEmail"];
+
+            var client = new SmtpClient(host, port)
             {
-                Credentials = new NetworkCredential("3e59e45d57cb23", "6955de50f9d07b"),
+                Credentials = new NetworkCredential(username, password),
                 EnableSsl = true
             };
 
-            string subject = "Welcome to Our App";
-            string body = $"Hello {fullName},\n\nThank you for registering with us!";
+            var mail = new MailMessage();
+            mail.From = new MailAddress(fromEmail);
+            mail.To.Add(toEmail);
+            mail.Subject = "Welcome to Our App!";
+            mail.Body = $"Hello {fullName},\n\nYour registration was successful.";
 
-            MailMessage message = new MailMessage(
-                from: "from@example.com",         // You can change this to your Mailtrap "from"
-                to: toEmail,
-                subject,
-                body
-            );
-
-            client.Send(message);
+            client.Send(mail);
         }
 
     }

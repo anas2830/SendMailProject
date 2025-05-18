@@ -230,3 +230,4 @@ D:\practice-class\SendMailProject\SendMailProject\obj\Debug\net9.0\refint\SendMa
 D:\practice-class\SendMailProject\SendMailProject\obj\Debug\net9.0\SendMailProject.pdb
 D:\practice-class\SendMailProject\SendMailProject\obj\Debug\net9.0\SendMailProject.genruntimeconfig.cache
 D:\practice-class\SendMailProject\SendMailProject\obj\Debug\net9.0\ref\SendMailProject.dll
+D:\practice-class\SendMailProject\SendMailProject\obj\Debug\net9.0\SendMailProject.sourcelink.json
