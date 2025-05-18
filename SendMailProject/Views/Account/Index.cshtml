@@ -1,0 +1,40 @@
+﻿@model IEnumerable<SendMailProject.Models.RegisterViewModel>
+
+@{
+    ViewBag.Title = "User List";
+}
+
+
+<h2>User List</h2>
+
+<!-- Create Button -->
+<div style="text-align: right; margin-bottom: 15px;">
+    <a class="btn btn-primary" href="@Url.Action("Register", "Account")">Create User</a>
+</div>
+
+
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    @TempData["SuccessMessage"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<!-- User Table -->
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Password</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var RegisterViewModel in Model)
+        {
+            <tr>
+                <td>@RegisterViewModel.FullName</td>
+                <td>@RegisterViewModel.Email</td>
+                <td>@RegisterViewModel.Password</td>
+            </tr>
+        }
+    </tbody>
+</table>
